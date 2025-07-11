@@ -263,27 +263,27 @@ const UserSignup = async (req, res) => {
         let DeviceID = "";
 
         // ✅ For regular users, check device ID
-        if (role === "user") {
-            if (deviceType === "laptop" || deviceType === "desktop") {
-                const motherboardInfo = await si.baseboard();
-                DeviceID = motherboardInfo.serial?.trim() || "UNKNOWN_LAPTOP";
-            } else if (deviceType === "mobile") {
-                DeviceID = deviceId || "UNKNOWN_MOBILE";
-            }
+        // if (role === "user") {
+        //     if (deviceType === "laptop" || deviceType === "desktop") {
+        //         const motherboardInfo = await si.baseboard();
+        //         DeviceID = motherboardInfo.serial?.trim() || "UNKNOWN_LAPTOP";
+        //     } else if (deviceType === "mobile") {
+        //         DeviceID = deviceId || "UNKNOWN_MOBILE";
+        //     }
 
-            if (!DeviceID || DeviceID.includes("UNKNOWN")) {
-                return res.status(400).json({
-                    message: "Device ID could not be retrieved. Please try again.",
-                });
-            }
+        //     if (!DeviceID || DeviceID.includes("UNKNOWN")) {
+        //         return res.status(400).json({
+        //             message: "Device ID could not be retrieved. Please try again.",
+        //         });
+        //     }
 
-            const existingDevice = await signupModel.findOne({ MotherboardID: DeviceID });
-            if (existingDevice) {
-                return res.status(400).json({
-                    message: "This device is already registered.",
-                });
-            }
-        }
+        //     const existingDevice = await signupModel.findOne({ MotherboardID: DeviceID });
+        //     if (existingDevice) {
+        //         return res.status(400).json({
+        //             message: "This device is already registered.",
+        //         });
+        //     }
+        // }
 
         const currentYear = new Date().getFullYear();
 
@@ -330,13 +330,13 @@ const UserSignup = async (req, res) => {
         });
     }
 };
-
 const loginUser = async (req, res) => {
     try {
         const { email, password, deviceType, deviceId } = req.body;
-        console.log(req.body);
 
         const user = await signupModel.findOne({ email });
+        // console.log(user);
+
         if (!user) {
             return res.status(404).json({
                 message: "Email ID Doesn't Exist",
@@ -352,27 +352,55 @@ const loginUser = async (req, res) => {
             });
         }
 
-        console.log("User Role:", user.role); // 🧪 Debug log
+        // console.log("User Info:", user.role, user.MotherboardID); // 🧪 Debug log        
 
         // ✅ If not admin, perform device check
-        if (user.role !== 'admin') {
-            let currentDeviceID = "";
-            if (deviceType === "laptop") {
-                const currentMotherboardInfo = await si.baseboard();
-                currentDeviceID = currentMotherboardInfo.serial.trim();
-            } else {
-                currentDeviceID = deviceId;
-            }
+        // if (user.role !== 'admin') {
+        //     let currentDeviceID = "";
+        //     if (deviceType === "laptop") {
+        //         const currentMotherboardInfo = await si.baseboard();
+        //         currentDeviceID = currentMotherboardInfo.serial.trim();
+        //     } else {
+        //         currentDeviceID = deviceId;
+        //     }
 
-            const storedDeviceID = user.MotherboardID?.trim();
+        //     const storedDeviceID = user.MotherboardID?.trim();
 
-            if (currentDeviceID !== storedDeviceID) {
-                return res.status(403).json({
-                    message: "You cannot log in from another device",
-                    status: 403,
-                });
-            }
-        }
+        //     console.log("Current Device ID:", currentDeviceID);
+        //     console.log("Stored Device ID:", storedDeviceID);
+        //     if (currentDeviceID !== storedDeviceID) {
+        //         return res.status(403).json({
+        //             message: "You cannot log in from another device",
+        //             status: 403,
+        //         });
+        //     }
+        // }
+        // if (user.role !== 'admin') {
+        //     let currentDeviceID = "";
+
+        //     if (deviceType === "laptop" || deviceType === "desktop") {
+        //         const currentMotherboardInfo = await si.baseboard();
+        //         currentDeviceID = currentMotherboardInfo?.serial?.trim() || "UNKNOWN_LAPTOP";
+        //     } else if (deviceType === "mobile") {
+        //         currentDeviceID = deviceId?.trim() || "UNKNOWN_MOBILE";
+        //     } else {
+        //         return res.status(400).json({
+        //             message: "Unknown device type. Cannot authenticate device.",
+        //         });
+        //     }
+
+        //     const storedDeviceID = user.MotherboardID?.trim() || "UNKNOWN";
+
+        //     console.log("Current Device ID:", currentDeviceID);
+        //     console.log("Stored Device ID:", storedDeviceID);
+
+        //     if (currentDeviceID !== storedDeviceID) {
+        //         return res.status(403).json({
+        //             message: "You cannot log in from another device",
+        //             status: 403,
+        //         });
+        //     }
+        // }
 
         // ✅ Generate Token
         const createdToken = jwt.sign(
