@@ -33,7 +33,7 @@ const todolistSchema = new mongoose.Schema(
 );
 
 // Auto-increment doc ID (optional)
-todolistSchema.plugin(AutoIncrement, { inc_field: "taskid" });
+// todolistSchema.plugin(AutoIncrement, { inc_field: "taskid" });
 
 // Counter for per-user taskId
 const counterSchema = new mongoose.Schema({
