@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+const Subjects = ["Mathematics", "Physics", "Chemistry", "Biology"]
 
 const ClassManagementSchema = new mongoose.Schema(
     {
         subject: {
             type: String,
             required: true,
-            enum: ["Mathematics", "Physics", "Chemistry", "Biology"]
+            enum: Subjects
         },
         standard: {
             type: String,
@@ -37,4 +38,8 @@ const ClassManagementSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("ClassManagement", ClassManagementSchema);
+const classModel = mongoose.model("ClassManagement", ClassManagementSchema);
+module.exports = {
+    Subjects,
+    classModel
+}

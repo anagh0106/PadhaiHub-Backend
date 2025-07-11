@@ -1,7 +1,7 @@
-const classModel = require("../model/ClassManagementModel")
 const FacultyData = require("../model/FacultyModel")
 const { CourseModel } = require("../model/CourseModel");
 const StudentInfoModel = require("../model/StudentInfoModel");
+const { Subjects, classModel } = require("../model/ClassManagementModel")
 
 const createClass = async (req, res) => {
     try {
@@ -12,6 +12,8 @@ const createClass = async (req, res) => {
             return res.status(403).json({ message: "You are not permitted to access this" });
         }
         const facultydata = await FacultyData.findById(faculty.trim());
+        // console.log(facultydata);
+
         if (!facultydata) {
             return res.status(404).json({ message: "Faculty not found" });
         }
@@ -93,15 +95,14 @@ const getClass = async (req, res) => {
 }
 const getSubjectName = async (req, res) => {
     try {
-        const subjects = await CourseModel.find();
 
-        if (!subjects) {
+        if (!Subjects) {
             return res.status(404).json({
                 message: "Subjects Not Found !"
             })
         }
         return res.status(200).json({
-            subjects
+            Subjects
         })
 
     } catch (error) {
