@@ -158,6 +158,92 @@ const updatePassword = async (req, res) => {
         });
     }
 };
+// const UserSignup = async (req, res) => {
+//     try {
+//         console.log(req.body);
+//         const { email, password, deviceType, deviceId } = req.body;
+
+//         const adminEmails = ["anagh0106@gmail.com"];
+
+//         // ✅ Check if email already exists
+//         const existingUser = await signupModel.findOne({ email });
+//         if (existingUser) {
+//             return res.status(400).json({ message: "Email already exists." });
+//         }
+
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const role = adminEmails.includes(email) ? "admin" : "user";
+
+//         let DeviceID = "";
+
+//         // ✅ For regular users, check device ID
+//         if (role === "user") {
+//             if (deviceType === "laptop" || deviceType === "desktop") {
+//                 const motherboardInfo = await si.baseboard();
+//                 DeviceID = motherboardInfo.serial?.trim() || "UNKNOWN_LAPTOP";
+//             } else if (deviceType === "mobile") {
+//                 DeviceID = deviceId || "UNKNOWN_MOBILE";
+//             }
+
+//             if (!DeviceID || DeviceID.includes("UNKNOWN")) {
+//                 return res.status(400).json({
+//                     message: "Device ID could not be retrieved. Please try again.",
+//                 });
+//             }
+
+//             const existingDevice = await signupModel.findOne({ MotherboardID: DeviceID });
+//             if (existingDevice) {
+//                 return res.status(400).json({
+//                     message: "This device is already registered.",
+//                 });
+//             }
+//         }
+
+//         const currentYear = new Date().getFullYear();
+
+//         // ✅ Step 1: Create user to get auto-generated studentSeq
+//         const saveUser = await signupModel.create({
+//             ...req.body,
+//             password: hashedPassword,
+//             role,
+//             MotherboardID: role === "user" ? DeviceID : undefined,
+//             admissionYear: currentYear,
+//         });
+
+//         // ✅ Step 2: Generate studentId using that unique studentSeq
+//         if (role === "user" && saveUser.studentSeq) {
+//             const studentId = `STU-100-${currentYear}${String(saveUser.studentSeq).padStart(4, "0")}`;
+
+//             // ✅ Final safety check — avoid duplicate studentId even if rare plugin issue
+//             const exists = await signupModel.findOne({ studentId });
+
+//             if (exists) {
+//                 // Clean up created user — shouldn't happen normally
+//                 await signupModel.findByIdAndDelete(saveUser._id);
+//                 return res.status(500).json({
+//                     success: false,
+//                     message: "Generated student ID already exists. Please try again.",
+//                 });
+//             }
+
+//             // ✅ Assign and save
+//             saveUser.studentId = studentId;
+//             await saveUser.save();
+//         }
+
+//         return res.status(201).json({
+//             success: true,
+//             message: "User created successfully",
+//             userData: saveUser,
+//             redirectUrl: "/signin",
+//         });
+//     } catch (error) {
+//         console.error("Error during signup:", error);
+//         return res.status(500).json({
+//             message: "An error occurred during signup. Please try again later.",
+//         });
+//     }
+// };
 const UserSignup = async (req, res) => {
     try {
         console.log(req.body);
@@ -201,8 +287,8 @@ const UserSignup = async (req, res) => {
 
         const currentYear = new Date().getFullYear();
 
-        // ✅ Step 1: Create user to get auto-generated studentSeq
-        const saveUser = await signupModel.create({
+        // ✅ Step 1: Create user without studentId yet
+        const saveUser = new signupModel({
             ...req.body,
             password: hashedPassword,
             role,
@@ -210,15 +296,15 @@ const UserSignup = async (req, res) => {
             admissionYear: currentYear,
         });
 
-        // ✅ Step 2: Generate studentId using that unique studentSeq
+        await saveUser.save(); // Save initially
+
+        // ✅ Step 2: Generate studentId safely
         if (role === "user" && saveUser.studentSeq) {
             const studentId = `STU-100-${currentYear}${String(saveUser.studentSeq).padStart(4, "0")}`;
 
-            // ✅ Final safety check — avoid duplicate studentId even if rare plugin issue
+            // Double-check no other user has same studentId (extremely rare)
             const exists = await signupModel.findOne({ studentId });
-
             if (exists) {
-                // Clean up created user — shouldn't happen normally
                 await signupModel.findByIdAndDelete(saveUser._id);
                 return res.status(500).json({
                     success: false,
@@ -226,9 +312,8 @@ const UserSignup = async (req, res) => {
                 });
             }
 
-            // ✅ Assign and save
             saveUser.studentId = studentId;
-            await saveUser.save();
+            await saveUser.save(); // Save studentId update
         }
 
         return res.status(201).json({
@@ -237,6 +322,7 @@ const UserSignup = async (req, res) => {
             userData: saveUser,
             redirectUrl: "/signin",
         });
+
     } catch (error) {
         console.error("Error during signup:", error);
         return res.status(500).json({
@@ -244,6 +330,7 @@ const UserSignup = async (req, res) => {
         });
     }
 };
+
 const loginUser = async (req, res) => {
     try {
         const { email, password, deviceType, deviceId } = req.body;
