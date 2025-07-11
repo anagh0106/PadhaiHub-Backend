@@ -1,0 +1,17 @@
+const classController = require("../controller/ClassManagementController")
+const middleware = require("../middleware/AuthMiddleware")
+const requireRole = require("../middleware/RoleMiddleware")
+const express = require("express")
+const router = express.Router()
+
+router.post("/createClass", middleware, requireRole("admin"), classController.createClass)
+router.get("/getClass", classController.getClass)
+router.get("/getSubject", classController.getSubjectName)
+router.get("/usedRooms", classController.usedRooms)
+router.get("/usedFaculty", classController.usedFaculty)
+router.delete("/deleteClass", middleware, requireRole("admin"), classController.deleteClass)
+router.get("/getActiveClassCount", middleware, requireRole("admin"), classController.countActiveClass)
+router.get("/upcomingSession", classController.upComingLiveClass)
+router.get('/getStandard', classController.getStandard)
+router.get("/getGroup", classController.getGroup)
+module.exports = router
