@@ -3,8 +3,10 @@ const mongoose = require("mongoose")
 const cors = require("cors");
 const { dbConnection } = require("./util/DbConnection");
 const app = express();
-const PORT = 3000
+const PORT = process.env.PORT || 3000;
+
 require("dotenv").config();
+
 mongoose.set('strictQuery', false);
 
 dbConnection();
