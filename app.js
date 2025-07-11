@@ -11,7 +11,9 @@ mongoose.set('strictQuery', false);
 
 dbConnection();
 app.use(express.json());
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({
+    origin: "https://padhaihub-one.vercel.app" || "http://localhost:3000", credentials: true
+}));
 
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
@@ -59,5 +61,6 @@ app.get("/testing", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on port http://192.168.31.252:${PORT}`);
     console.log(`Server is running on port http://localhost:${PORT}`);
+    console.log(`Server is running on port https://padhaihub-backend.onrender.com`);
 });
 
