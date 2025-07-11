@@ -13,7 +13,6 @@ router.post("/verify", AuthController.verifyOTP);
 router.get("/getcount", AuthController.usercount)
 router.post("/updatepassword", AuthController.updatePassword);
 
-
 router.post(
     "/submit-student-info",
     authMiddleware,

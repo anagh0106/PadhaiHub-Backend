@@ -47,6 +47,14 @@ app.use("/class", ClassRouter)
 app.use("/mocktest", AdminMockTest)
 app.use("/questionTest", QuestionTestByAdmin)
 app.use("/test", TestAction)
+app.get("/testing", (req, res) => {
+    res.json({
+        status: "Live ✅",
+        backend: "PadhaiHub-Backend",
+        timestamp: new Date().toISOString()
+    });
+});
+
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on port http://192.168.31.252:${PORT}`);
