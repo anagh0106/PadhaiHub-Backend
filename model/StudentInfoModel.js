@@ -18,6 +18,10 @@ const StudentInfoSchema = new schema({
         enum: ['A', 'B'], // ✅ ye frontend se match karega
         required: true,
         immutable: true
+    },
+    profile: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true

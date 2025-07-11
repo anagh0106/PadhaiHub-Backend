@@ -11,6 +11,10 @@ const LoginDetailSchema = new schema({
         type: String,
         required: true,
     },
+    studentId: {
+        type: String,
+        default: null,
+    },
     lastLogin: {
         type: Date,
         default: Date.now,

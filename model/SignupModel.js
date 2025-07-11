@@ -26,11 +26,11 @@ const SignupSchema = new schema({
         default: 'user',
     },
     admissionYear: String,
-    studentId: { type: String, unique: true },
+    studentId: { type: String, unique: true, sparse: true },
     studentSeq: {
         type: Number,
         unique: true,
-        sparse: true,
+
     },
 }, {
     timestamps: true,

@@ -101,6 +101,8 @@ const getSubjectName = async (req, res) => {
                 message: "Subjects Not Found !"
             })
         }
+        console.log(Subjects);
+
         return res.status(200).json({
             Subjects
         })

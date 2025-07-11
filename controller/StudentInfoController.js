@@ -2,9 +2,9 @@ const StudentInfoModel = require("../model/StudentInfoModel");
 
 const saveStudentInfo = async (req, res, next) => {
     try {
-        const { studentId, email, fullName, phone, address, grade, group } = req.body;
+        const { studentId, email, fullName, phone, address, grade, group, profile } = req.body;
 
-        if (!studentId || !email || !fullName || !phone || !address || !grade || !group) {
+        if (!studentId || !email || !fullName || !phone || !address || !grade || !group || !profile) {
             return res.status(400).json({ message: "All fields are required." });
         }
 
@@ -23,15 +23,13 @@ const saveStudentInfo = async (req, res, next) => {
             address: address.trim(),
             grade: grade.trim(),
             group: group.trim(),
+            profile: req.file ? `uploads/${req.file.filename}` : null
 
         });
 
         await student.save();
 
-        // Send response here OR call next middleware
         return res.status(201).json({ message: "Student info saved successfully." });
-        // OR: if part of a chain, just call next()
-        // next();
     } catch (err) {
         console.error("Error saving student info:", err);
         res.status(500).json({ message: "Internal Server Error" });
@@ -81,13 +79,9 @@ const checkStudentIdExists = async (req, res) => {
 };
 const getStudentInfo = async (req, res) => {
     try {
-        const email = req.user?.email;
+        const email = "anagh1516@gmail.com";
+        // console.log(email);
 
-        if (!email) {
-            return res.status(401).json({
-                message: "Unauthorized user!",
-            });
-        }
         const userInformation = await StudentInfoModel.findOne({ email });
         console.log(userInformation)
         if (!userInformation) {
@@ -95,7 +89,7 @@ const getStudentInfo = async (req, res) => {
                 message: "User information not found!",
             });
         }
-        return res.status(200).json(userInformation); // send the object directly
+        return res.status(200).json(userInformation);
     } catch (error) {
         console.error("Error fetching student info:", error);
         return res.status(500).json({
