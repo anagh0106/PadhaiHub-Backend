@@ -458,6 +458,8 @@ const loginUser = async (req, res) => {
 const usercount = async (req, res) => {
     try {
         const userCount = await signupModel.countDocuments({ role: 'user' || 'User' });
+        console.log(userCount);
+        
         res.json({ count: userCount });
     } catch (err) {
         console.error(err);
