@@ -30,6 +30,7 @@ const SignupSchema = new schema({
     studentSeq: {
         type: Number,
         unique: true,
+        sparse: true,
     },
 }, {
     timestamps: true,
