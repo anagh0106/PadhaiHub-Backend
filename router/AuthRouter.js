@@ -5,7 +5,7 @@ const StudentInfoController = require("../controller/StudentInfoController")
 const authMiddleware = require("../middleware/AuthMiddleware");
 const StudentInfoModel = require("../model/StudentInfoModel");
 const requireRole = require("../middleware/RoleMiddleware")
-const profileImage = require("../middleware/ProfileMiddleware")
+const {upload} = require("../middleware/ProfileMiddleware")
 
 router.post("/signup", AuthController.UserSignup);
 router.post("/login", AuthController.loginUser);
@@ -16,9 +16,9 @@ router.post("/updatepassword", AuthController.updatePassword);
 
 router.post(
     "/submit-student-info",
-    authMiddleware,
-    profileImage.single("profile"),
-    requireRole("user"),
+    // authMiddleware,
+    // upload.single("profile"),
+    // requireRole("user"),
     StudentInfoController.saveStudentInfo
 );
 router.get(

@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const StudentInfoSchema = new schema({
-    studentId: { type: String, required: true },
-    email: { type: String, required: true },
+    studentId: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
     fullName: { type: String, required: true },
-    phone: { type: String, required: true },
+    phone: { type: String, required: true, match: /^[0-9]{10}$/, unique: true },
     address: { type: String, required: true },
     grade: {
         type: String,
