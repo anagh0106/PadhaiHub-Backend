@@ -19,10 +19,10 @@ const StudentInfoSchema = new schema({
         required: true,
         immutable: true
     },
-    profile: {
-        type: String,
-        default: null
-    }
+    // profile: {
+    //     type: String,
+    //     default: null
+    // }
 }, {
     timestamps: true
 });

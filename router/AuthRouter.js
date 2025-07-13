@@ -17,7 +17,6 @@ router.post("/updatepassword", AuthController.updatePassword);
 router.post(
     "/submit-student-info",
     // authMiddleware,
-    upload.single("profile"),
     // requireRole("user"),
     StudentInfoController.saveStudentInfo
 );

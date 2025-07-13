@@ -25,7 +25,7 @@ const saveStudentInfo = async (req, res) => {
             address: address.trim(),
             grade: grade.trim(),
             group: group.trim(),
-            profile: req.file ? `uploads/${req.file.filename}` : null
+            // profile: req.file ? `uploads/${req.file.filename}` : null
         });
 
 
