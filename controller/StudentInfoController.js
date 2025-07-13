@@ -4,7 +4,7 @@ const saveStudentInfo = async (req, res) => {
     try {
         const { studentId, email, fullName, phone, address, grade, group } = req.body;
 
-        
+
         if (!studentId || !email || !fullName || !phone || !address || !grade || !group) {
             return res.status(400).json({ message: "All fields are required." });
         }
@@ -81,8 +81,8 @@ const checkStudentIdExists = async (req, res) => {
 };
 const getStudentInfo = async (req, res) => {
     try {
-        const email = "anagh1516@gmail.com";
-        // console.log(email);
+        const { email } = req.query;
+        console.log(email);
 
         const userInformation = await StudentInfoModel.findOne({ email });
         console.log(userInformation)
