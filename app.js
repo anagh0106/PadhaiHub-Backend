@@ -34,6 +34,7 @@ const QuestionTestByAdmin = require("./router/AdminTestQuestionRouter")
 const TestAction = require("./router/MockTestSubmissionRouter")
 // const PredictionPython = require("./router/AdminMockTestRouter")
 
+app.use('/uploads', express.static('uploads'));
 app.use("/user", authuser);
 app.use("/contact", Contactus);
 app.use("/review", ReviewRouter);

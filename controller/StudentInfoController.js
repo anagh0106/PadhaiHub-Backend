@@ -2,7 +2,7 @@ const StudentInfoModel = require("../model/StudentInfoModel");
 
 const saveStudentInfo = async (req, res) => {
     try {
-        const { studentId, email, fullName, phone, address, grade, group, profile } = req.body;
+        const { studentId, email, fullName, phone, address, grade, group } = req.body;
 
         if (!studentId || !email || !fullName || !phone || !address || !grade || !group) {
             return res.status(400).json({ message: "All fields are required." });
@@ -15,6 +15,7 @@ const saveStudentInfo = async (req, res) => {
                 alreadySubmitted: true
             });
         }
+
         const student = new StudentInfoModel({
             studentId: studentId.trim(),
             email: email.trim(),
@@ -23,8 +24,9 @@ const saveStudentInfo = async (req, res) => {
             address: address.trim(),
             grade: grade.trim(),
             group: group.trim(),
-            profile: profile || "Student"
+            profile: req.file ? `uploads/${req.file.filename}` : null
         });
+
 
         await student.save();
 
