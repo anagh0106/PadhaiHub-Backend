@@ -1,8 +1,13 @@
 const FacultyModel = require("../model/FacultyModel")
+const mailer = require("../util/SendMailFaculty")
+const facultyLoginModel = require("../model/FacultyLoginModel")
+const bcrypt = require("bcrypt")
 
 const addFaculty = async (req, res) => {
     try {
         const AdminEmail = req.user?.email
+        if (!AdminEmail) return null;
+
         const { name, subject, image, qualification, experience, contact, bio } = req.body;
 
         if (!name || !subject || !image || !qualification || !experience || !contact || !bio) {
@@ -14,17 +19,21 @@ const addFaculty = async (req, res) => {
         const registeredFaculty = await FacultyModel.findOne({ contact: contact });
 
         if (registeredFaculty) {
-            const updatedFaculty = await FacultyModel.findOneAndUpdate(
-                { contact: contact },
-                { name, subject, image, qualification, experience, bio },
-                { new: true }
-            );
+            // const updatedFaculty = await FacultyModel.findOneAndUpdate(
+            //     { contact: contact },
+            //     { name, subject, image, qualification, experience, bio },
+            //     { new: true }
+            // );
 
-            return res.status(200).json({
-                message: "Faculty updated successfully!",
-                faculty: updatedFaculty
+            return res.status(409).json({
+                message: "Faculty Already Added!",
             });
         }
+
+        const passwordFaculty = [...Array(10)].map(() => Math.random().toString(36)[2]).join('')
+        console.log(passwordFaculty);
+
+        const hashedPassowrd = await bcrypt.hash(passwordFaculty, 10)
 
         const newFaculty = await FacultyModel.create({
             name,
@@ -33,8 +42,36 @@ const addFaculty = async (req, res) => {
             image,
             qualification,
             experience,
-            contact
+            contact // must be an email !
         });
+
+        await facultyLoginModel.create({ email: contact, password: hashedPassowrd, facultyInfo: newFaculty._id })
+
+        const Mailsubject = "Congratulations! You’re Now Part of the PadhaiHub Faculty Team"
+        const text = `Dear <h2>${name}</h2>,
+
+Welcome to PadhaiHub! 🎓  
+We’re excited to have you as part of our faculty team.
+
+Your login credentials have been successfully created. Please find your details below:
+
+Email: <h3>${contact}</h3>
+Password: <h3>${passwordFaculty}</h3>
+
+You can log in to your faculty dashboard here:  
+https://padhaihub.com/faculty/login
+
+Once logged in, we recommend changing your password for security reasons.
+
+If you face any issues while logging in or have any questions, feel free to reach out to us at support@padhaihub.com.
+
+Looking forward to a great journey ahead!
+
+Best regards,  
+Admin PadhaiHub  
+https://padhaihub-one.vercel.app/
+`
+        await mailer.sendMail(contact, Mailsubject, text)
 
         return res.status(201).json({
             message: "Faculty added successfully!",
@@ -96,10 +133,10 @@ const getFacultyById = async (req, res) => {
 };
 const Facultycount = async (req, res) => {
     try {
-        const email=req.user?.email
-        if(!email){
+        const email = req.user?.email
+        if (!email) {
             return res.status(404).json({
-                message:"You are not authencticated for this route",
+                message: "You are not authencticated for this route",
             })
         }
         const f_count = await FacultyModel.countDocuments()

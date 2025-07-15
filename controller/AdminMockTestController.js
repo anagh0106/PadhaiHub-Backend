@@ -70,12 +70,29 @@ const getMockTest = async (req, res) => {
         const { grade, group } = req.query;
 
         const filters = {};
+        const startTest = false
         if (grade) filters.standard = grade;
         if (group) filters.group = group;
 
         const mocktest = await MockTestModel.find(filters);
-        const mockTestDate = mocktest.map(t => t.date.toISOString().split("T")[0])
-        console.log(mockTestDate)
+
+        const mockTestDateAndTime = mocktest.map((t) => ({
+            startTime: t.startTime,
+            date: new Date(t.date).toISOString().split("T")[0]
+        }))
+        const testDate = mockTestDateAndTime.map(t => t.date)
+        const testTime = mockTestDateAndTime.map(t => t.startTime).slice(0, 5)
+
+        const todayDate = new Date().toLocaleTimeString()
+        const todayTime = new Date().toLocaleDateString()
+        
+        console.log(todayDate, todayTime)
+        if (todayDate === testDate && todayTime === testTime) {
+            console.log("Start Test");
+        } else {
+            console.log("Start Soon");
+        }
+
 
         return res.json({ mocktest });
 
@@ -120,7 +137,6 @@ const deleteMockTest = async (req, res) => {
         });
     }
 };
-
 const getstandards = async (req, res) => {
     try {
         return res.json(standards)
