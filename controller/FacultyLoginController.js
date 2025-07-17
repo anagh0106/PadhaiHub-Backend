@@ -13,20 +13,17 @@ const handleLoginFaculty = async (req, res) => {
             });
         }
 
-        // Find faculty by email
         const FacultyLogin = await facultyModel.findOne({ email });
 
         if (!FacultyLogin) {
             return res.status(401).json({ message: "Invalid email or password!" });
         }
 
-        // Compare password using bcrypt
         const isMatch = await bcrypt.compare(password, FacultyLogin.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password!" });
         }
 
-        // Generate JWT token
         const token = jwt.sign(
             {
                 id: FacultyLogin._id,

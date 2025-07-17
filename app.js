@@ -32,6 +32,7 @@ const ClassRouter = require("./router/ClassManagementRouter")
 const AdminMockTest = require("./router/AdminMockTestRouter")
 const QuestionTestByAdmin = require("./router/AdminTestQuestionRouter")
 const TestAction = require("./router/MockTestSubmissionRouter")
+const FacultyLogin = require("./router/FacultyLoginRouter")
 // const PredictionPython = require("./router/AdminMockTestRouter")
 
 app.use('/uploads', express.static('uploads'));
@@ -50,6 +51,7 @@ app.use("/class", ClassRouter)
 app.use("/mocktest", AdminMockTest)
 app.use("/questionTest", QuestionTestByAdmin)
 app.use("/test", TestAction)
+app.use("/fac", FacultyLogin)
 app.get("/testing", (req, res) => {
     res.json({
         status: "Live ✅",
