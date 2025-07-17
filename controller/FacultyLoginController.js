@@ -38,6 +38,7 @@ const handleLoginFaculty = async (req, res) => {
             message: "Faculty Logged In successfully!",
             redirecturl: "/faculty/dashboard",
             token: token,
+            email: email
         });
 
     } catch (error) {

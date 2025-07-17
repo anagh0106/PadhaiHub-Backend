@@ -8,7 +8,7 @@ const router = express.Router()
 router.post("/addFaculty", middleware, requiRole("admin"), Facultycontroller.addFaculty)
 router.get("/getFaculties", Facultycontroller.getAllFaculty)
 router.get("/getFacultyCount", middleware, Facultycontroller.Facultycount)
-
+router.get("/getFacultyInfoByEmail", Facultycontroller.getFacultyByEmail)
 router.post("/login", FacultyLogincontroller.handleLoginFaculty)
 
 

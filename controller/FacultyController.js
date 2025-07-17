@@ -110,10 +110,16 @@ const getAllFaculty = async (req, res) => {
         });
     }
 };
-const getFacultyById = async (req, res) => {
+const getFacultyByEmail = async (req, res) => {
     try {
-        const id = req.params.id;
-        const faculty = await FacultyModel.findById(id);
+        const { contact } = req.query;
+
+        if (!contact) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        const faculty = await FacultyModel.findOne({ contact });
+        console.log(faculty);
 
         if (!faculty) {
             return res.status(404).json({ message: "Faculty not found" });
@@ -121,7 +127,7 @@ const getFacultyById = async (req, res) => {
 
         return res.status(200).json({
             message: "Faculty retrieved successfully",
-            faculty: faculty
+            faculty
         });
 
     } catch (err) {
@@ -131,6 +137,7 @@ const getFacultyById = async (req, res) => {
         });
     }
 };
+
 const Facultycount = async (req, res) => {
     try {
         const email = req.user?.email
@@ -149,6 +156,6 @@ const Facultycount = async (req, res) => {
 module.exports = {
     addFaculty,
     getAllFaculty,
-    getFacultyById,
+    getFacultyByEmail,
     Facultycount
 };
