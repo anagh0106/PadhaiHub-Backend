@@ -246,6 +246,35 @@ const upComingLiveClass = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error!" });
     }
 }
+const getClassForFaculty = async (req, res) => {
+    try {
+        const { contact } = req.query;
+        console.log("Email received:", contact);
+
+        if (!contact) {
+            return res.status(400).json({
+                message: "Please enter a valid email ID",
+            });
+        }
+
+        const allClasses = await classModel.find().populate("faculty");
+        const today = new Date().toISOString().split("T")[0];
+
+        const upcomingClasses = allClasses.filter(
+            (c) => new Date(c.date).toISOString().split("T")[0] >= today
+        );
+
+        const facultyClasses = upcomingClasses.filter(
+            (c) => c.faculty && c.faculty.contact === contact
+        );
+        res.status(200).json({ classes: facultyClasses });
+
+    } catch (error) {
+        console.error("Error while getting class for faculty:", error);
+        res.status(500).json({ message: "Internal Server Error!" });
+    }
+};
+
 module.exports = {
     createClass,
     getClass,
@@ -256,5 +285,6 @@ module.exports = {
     countActiveClass,
     upComingLiveClass,
     getStandard,
-    getGroup
+    getGroup,
+    getClassForFaculty
 }

@@ -14,4 +14,5 @@ router.get("/getActiveClassCount", middleware, requireRole("admin"), classContro
 router.get("/upcomingSession", classController.upComingLiveClass)
 router.get('/getStandard', classController.getStandard)
 router.get("/getGroup", classController.getGroup)
+router.get("/getClassByFaculty", classController.getClassForFaculty)
 module.exports = router

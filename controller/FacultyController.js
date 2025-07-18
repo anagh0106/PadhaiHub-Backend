@@ -137,7 +137,6 @@ const getFacultyByEmail = async (req, res) => {
         });
     }
 };
-
 const Facultycount = async (req, res) => {
     try {
         const email = req.user?.email
