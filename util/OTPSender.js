@@ -6,8 +6,8 @@ const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
         service: "gmail",
         auth: {
-            user: "anagh0106@gmail.com",  // Your email address
-            pass: "klonoloqcfneojqe"      // Your Gmail app-specific password
+            user: process.env.EMAIL_USER,  // Your email address
+            pass: process.env.EMAIL_PASS     // Your Gmail app-specific password
         }
     });
 

@@ -7,9 +7,7 @@ const sendMail = async (to, subject, text) => {
         port: 465,
         secure: true,
         auth: {
-            user: "anagh0106@gmail.com",
-            // pass: "klonoloqcfneojqe" // Replace with the correct App Password
-            // pass:"fulqkxpgivyujwsr"
+            user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         }
     });
