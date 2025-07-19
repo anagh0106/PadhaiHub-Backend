@@ -285,7 +285,7 @@ const getClassForFaculty = async (req, res) => {
         });
         const btn = updatedFacultyClasses.filter(s => s.showStartButton == true)
 
-        res.status(200).json({ classes: facultyClasses, btn: btn });
+        res.status(200).json({ classes: facultyClasses, btn });
 
     } catch (error) {
         console.error("Error while getting class for faculty:", error);
