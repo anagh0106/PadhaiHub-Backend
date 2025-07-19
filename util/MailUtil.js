@@ -13,7 +13,7 @@ const sendMail = async (to, subject, text) => {
     });
 
     const mailOptions = {
-        from: `"Anagh" <anagh0106@gmail.com>`, // Ensure sender email matches the authenticated account
+        from: `"Anagh" <anagh_22237@ldrp.ac.in>`, // Ensure sender email matches the authenticated account
         to: to,
         subject: subject,
         html: `<h1>${text}</h1>`,
