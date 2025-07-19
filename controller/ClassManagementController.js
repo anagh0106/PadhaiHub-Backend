@@ -268,7 +268,8 @@ const getClassForFaculty = async (req, res) => {
             (c) => c.faculty && c.faculty.contact === contact
         );
         const ClassTime = facultyClasses.map((f) => f.time); // ["10:00", "11:30", ...]
-
+        const now = new Date()
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
         const timeToMinutes = (time) => {
             const [h, m] = time.split(":").map(Number);
             return h * 60 + m;
