@@ -283,7 +283,7 @@ const getClassForFaculty = async (req, res) => {
                 showStartButton: minutesLeft <= 5 && minutesLeft >= 0
             };
         });
-        res.status(200).json({ classes: updatedFacultyClasses });
+        res.status(200).json({ classes: facultyClasses, btn: updatedFacultyClasses });
 
     } catch (error) {
         console.error("Error while getting class for faculty:", error);
