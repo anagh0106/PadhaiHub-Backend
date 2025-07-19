@@ -278,12 +278,17 @@ const getClassForFaculty = async (req, res) => {
         const updatedFacultyClasses = facultyClasses.map((cls) => {
             const classMinutes = timeToMinutes(cls.time);
             const minutesLeft = classMinutes - currentMinutes;
+
+            const showStartButton = minutesLeft <= 5 && minutesLeft >= -120;
+
             return {
-                ...cls,
-                showStartButton: minutesLeft <= 5 && minutesLeft >= 0
+                ...cls.toObject(),
+                showStartButton
             };
         });
+
         const btn = updatedFacultyClasses.filter(s => s.showStartButton == true)
+        console.log(btn);
 
         res.status(200).json({ classes: facultyClasses, btn });
 
