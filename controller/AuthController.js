@@ -422,7 +422,7 @@ const loginUser = async (req, res) => {
             { upsert: true, new: true }
         );
 
-        await mailer.sendMail(user.email, "Welcome to PadhaiHub", "Dear Student...");
+        // await mailer.sendMail(user.email, "Welcome to PadhaiHub", "Dear Student...");
 
         res.cookie("authToken", createdToken, {
             httpOnly: true,
