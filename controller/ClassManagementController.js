@@ -1,7 +1,8 @@
 const FacultyData = require("../model/FacultyModel")
 const { CourseModel } = require("../model/CourseModel");
 const StudentInfoModel = require("../model/StudentInfoModel");
-const { Subjects, classModel } = require("../model/ClassManagementModel")
+const { Subjects, classModel } = require("../model/ClassManagementModel");
+const { time } = require("systeminformation");
 
 const createClass = async (req, res) => {
     try {
@@ -263,11 +264,25 @@ const getClassForFaculty = async (req, res) => {
         const upcomingClasses = allClasses.filter(
             (c) => new Date(c.date).toISOString().split("T")[0] >= today
         );
-
         const facultyClasses = upcomingClasses.filter(
             (c) => c.faculty && c.faculty.contact === contact
         );
-        res.status(200).json({ classes: facultyClasses });
+        const ClassTime = facultyClasses.map((f) => f.time); // ["10:00", "11:30", ...]
+
+        const timeToMinutes = (time) => {
+            const [h, m] = time.split(":").map(Number);
+            return h * 60 + m;
+        };
+
+        const updatedFacultyClasses = facultyClasses.map((cls) => {
+            const classMinutes = timeToMinutes(cls.time);
+            const minutesLeft = classMinutes - currentMinutes;
+            return {
+                ...cls,
+                showStartButton: minutesLeft <= 5 && minutesLeft >= 0
+            };
+        });
+        res.status(200).json({ classes: updatedFacultyClasses });
 
     } catch (error) {
         console.error("Error while getting class for faculty:", error);
