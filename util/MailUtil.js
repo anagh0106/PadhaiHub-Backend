@@ -9,7 +9,8 @@ const sendMail = async (to, subject, text) => {
         auth: {
             user: "anagh0106@gmail.com",
             // pass: "klonoloqcfneojqe" // Replace with the correct App Password
-            pass:"fulqkxpgivyujwsr"
+            // pass:"fulqkxpgivyujwsr"
+            pass: process.env.EMAIL_PASS
         }
     });
 
