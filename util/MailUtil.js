@@ -1,5 +1,6 @@
 const mailer = require("nodemailer");
 const path = require("path");
+require("dotenv").config({ path: "../.env" });
 
 const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
@@ -13,7 +14,7 @@ const sendMail = async (to, subject, text) => {
     });
 
     const mailOptions = {
-        from: `"Anagh" <anagh0106@gmail.com>`, // Ensure sender email matches the authenticated account
+        from: `"Anagh" <${process.env.EMAIL_USER}>`, // Ensure sender email matches the authenticated account
         to: to,
         subject: subject,
         html: `<h1>${text}</h1>`,

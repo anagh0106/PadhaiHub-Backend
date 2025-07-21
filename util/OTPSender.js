@@ -1,5 +1,7 @@
 const mailer = require("nodemailer");
 const path = require("path");
+require("dotenv").config({ path: "../.env" })
+
 
 const sendMail = async (to, subject, text) => {
     // Creating the transporter with Gmail service
@@ -12,7 +14,7 @@ const sendMail = async (to, subject, text) => {
     });
 
     const mailOptions = {
-        from: "anagh0106@gmail.com",  // Sender's email
+        from: `"Anagh" <${process.env.EMAIL_USER}>`, // Sender's email
         to: to,                      // Recipient's email
         subject: subject,            // Subject of the email
         html: `${text}`,     // HTML body content

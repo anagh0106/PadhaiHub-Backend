@@ -1,4 +1,5 @@
 const mailer = require("nodemailer");
+require("dotenv").config({ path: "../.env" })
 
 const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
