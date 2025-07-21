@@ -1,4 +1,4 @@
-const FacultyData = require("../model/FacultyModel")
+const { FacultyModel } = require("../model/FacultyModel")
 const { CourseModel } = require("../model/CourseModel");
 const StudentInfoModel = require("../model/StudentInfoModel");
 const { Subjects, classModel } = require("../model/ClassManagementModel");
@@ -11,7 +11,7 @@ const createClass = async (req, res) => {
         if (!email) {
             return res.status(403).json({ message: "You are not permitted to access this" });
         }
-        const facultydata = await FacultyData.findById(faculty.trim());
+        const facultydata = await FacultyModel.findById(faculty.trim());
         // console.log(facultydata);
 
         if (!facultydata) {
@@ -62,7 +62,7 @@ const createClass = async (req, res) => {
 
         const savedClass = await newClass.save();
         const populated = await savedClass.populate("faculty");
-        
+
         res.status(201).json(populated);
 
     } catch (error) {

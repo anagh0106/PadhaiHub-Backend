@@ -99,7 +99,7 @@ const getAllFaculty = async (req, res) => {
                 qualification: "Qualification",
                 experience: "Teaching Experience",
                 contact: "Email ID",
-                image: "Profile Photo",
+                image: "Profile Photo Link",
             }
         });
 
