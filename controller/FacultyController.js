@@ -59,7 +59,7 @@ Email: <h3>${contact}</h3>
 Password: <h3>${passwordFaculty}</h3>
 
 You can log in to your faculty dashboard here:  
-https://padhaihub.com/faculty/login
+https://padhaihub-one.vercel.app/faculty/login
 
 Once logged in, we recommend changing your password for security reasons.
 

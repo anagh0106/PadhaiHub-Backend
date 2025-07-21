@@ -10,9 +10,10 @@ const sendMail = async (to, subject, text) => {
             pass: process.env.EMAIL_PASS
         }
     });
+    console.log(process.env.EMAIL_USER);
 
     const mailOptions = {
-        from: `"Anagh" <anagh0106@gmail.com>`, // Ensure sender email matches the authenticated account
+        from: `"Anagh" <${process.env.EMAIL_USER}>`, // Ensure sender email matches the authenticated account
         to: to,
         subject: subject,
         html: `${text}`,

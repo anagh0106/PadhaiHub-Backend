@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 require("dotenv").config();
 
+
 mongoose.set('strictQuery', false);
 
 dbConnection();
