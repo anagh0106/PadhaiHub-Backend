@@ -34,8 +34,9 @@ const AdminMockTest = require("./router/AdminMockTestRouter")
 const QuestionTestByAdmin = require("./router/AdminTestQuestionRouter")
 const TestAction = require("./router/MockTestSubmissionRouter")
 const FacultyLogin = require("./router/FacultyLoginRouter")
+const homepageRouter = require("./router/HomePageRouter")
 // const PredictionPython = require("./router/AdminMockTestRouter")
-
+app.use("/home", homepageRouter)
 app.use('/uploads', express.static('uploads'));
 app.use("/user", authuser);
 app.use("/contact", Contactus);
