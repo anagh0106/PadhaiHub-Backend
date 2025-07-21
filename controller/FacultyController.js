@@ -1,5 +1,5 @@
-const FacultyModel = require("../model/FacultyModel")
 const mailer = require("../util/SendMailFaculty")
+const { subjects, experience, FacultyModel, degrees } = require("../model/FacultyModel")
 const facultyLoginModel = require("../model/FacultyLoginModel")
 const bcrypt = require("bcrypt")
 
@@ -152,9 +152,39 @@ const Facultycount = async (req, res) => {
         res.status(500).json({ error: "Something went wrong" });
     }
 }
+const FacultySubject = async (req, res) => {
+    try {
+        return res.status(202).json(subjects)
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error !"
+        })
+    }
+}
+const FacultyExperience = async (req, res) => {
+    try {
+        return res.status(202).json(experience)
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error !"
+        })
+    }
+}
+const FacultyDegree = async (req, res) => {
+    try {
+        return res.status(202).json(degrees)
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error !"
+        })
+    }
+}
 module.exports = {
     addFaculty,
     getAllFaculty,
     getFacultyByEmail,
-    Facultycount
+    Facultycount,
+    FacultySubject,
+    FacultyExperience,
+    FacultyDegree
 };

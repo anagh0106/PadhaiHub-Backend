@@ -2,7 +2,6 @@ const FacultyData = require("../model/FacultyModel")
 const { CourseModel } = require("../model/CourseModel");
 const StudentInfoModel = require("../model/StudentInfoModel");
 const { Subjects, classModel } = require("../model/ClassManagementModel");
-const { time } = require("systeminformation");
 
 const createClass = async (req, res) => {
     try {
@@ -63,7 +62,7 @@ const createClass = async (req, res) => {
 
         const savedClass = await newClass.save();
         const populated = await savedClass.populate("faculty");
-
+        
         res.status(201).json(populated);
 
     } catch (error) {

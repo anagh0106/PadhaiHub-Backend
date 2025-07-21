@@ -10,6 +10,8 @@ router.get("/getFaculties", Facultycontroller.getAllFaculty)
 router.get("/getFacultyCount", middleware, Facultycontroller.Facultycount)
 router.get("/getFacultyInfoByEmail", Facultycontroller.getFacultyByEmail)
 router.post("/login", FacultyLogincontroller.handleLoginFaculty)
-
+router.get("/getFacultySubjects", Facultycontroller.FacultySubject)
+router.get("/getFacultyExperience", Facultycontroller.FacultyExperience)
+router.get("/getFacultyDegree", Facultycontroller.FacultyDegree)
 
 module.exports = router 
