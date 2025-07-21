@@ -1,24 +1,25 @@
 const mailer = require("nodemailer");
 require("dotenv").config({ path: "../.env" })
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
+const email = process.env.EMAIL_USER
+const pass = process.env.EMAIL_PASS
+
 const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
         secure: true,
-        // auth: {
-        //     user: process.env.EMAIL_USER,
-        //     pass: process.env.EMAIL_PASS
-        // }
         auth: {
-            user: "anagh0106@gmail.com",       // Exact same email
-            pass: "gfzhwajbdcdqpttd" // Copy-paste from Google App Passwords
+            user: email,
+            pass: pass
         }
+        // auth: {
+        //     user: "anagh0106@gmail.com",
+        //     pass: "gfzhwajbdcdqpttd"
+        // }
     });
 
     const mailOptions = {
-        from: `"Anagh" <${process.env.EMAIL_USER}>`, // Ensure sender email matches the authenticated account
+        from: `"Anagh Patel" <${email}>`, // Ensure sender email matches the authenticated account
         to: to,
         subject: subject,
         html: `${text}`,
