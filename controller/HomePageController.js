@@ -33,12 +33,6 @@ const StudentCount = async (req, res) => {
 }
 const Facultycount = async (req, res) => {
     try {
-        const email = req.user?.email
-        if (!email) {
-            return res.status(404).json({
-                message: "You are not authencticated for this route",
-            })
-        }
         const count = await FacultyModel.countDocuments()
         res.json(count)
     } catch (error) {
