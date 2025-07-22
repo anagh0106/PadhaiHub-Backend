@@ -6,7 +6,7 @@ const homePageText1 = async (req, res) => {
         const mainText = "Best Tuition Classes in the City";
         const headingLine1 = "Excel in Your";
         const headingLine2 = "Academic Journey";
-        const description = "Join thousands of successful students at PadhaiHub. Expert teachers, personalized attention, and proven results for Classes 11 & 12.";
+        const description = "  Join PadhaiHub and unlock your potential with expert guidance,personalized learning, and proven teaching methods that guarantee success.";
 
         return res.status(200).json({
             mainText,

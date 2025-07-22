@@ -17,6 +17,7 @@ exports.createCourse = async (req, res) => {
 
 exports.getCourses = async (req, res) => {
     try {
+        console.log("Received Data:", req.body);
         const courses = await Course.find();
         console.log(courses);
 
