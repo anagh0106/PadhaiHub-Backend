@@ -1,3 +1,6 @@
+const signupModel = require("../model/SignupModel")
+const { FacultyModel } = require("../model/FacultyModel")
+
 const homePageText1 = async (req, res) => {
     try {
         const mainText = "Best Tuition Classes in the City";
@@ -17,7 +20,34 @@ const homePageText1 = async (req, res) => {
         });
     }
 };
+const StudentCount = async (req, res) => {
+    try {
+        const count = await signupModel.countDocuments({ role: "user" })
 
+        return res.status(200).json(count)
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error !"
+        });
+    }
+}
+const Facultycount = async (req, res) => {
+    try {
+        const email = req.user?.email
+        if (!email) {
+            return res.status(404).json({
+                message: "You are not authencticated for this route",
+            })
+        }
+        const count = await FacultyModel.countDocuments()
+        res.json(count)
+    } catch (error) {
+        console.error(err);
+        res.status(500).json({ error: "Something went wrong" });
+    }
+}
 module.exports = {
-    homePageText1
+    homePageText1,
+    StudentCount,
+    Facultycount
 };
