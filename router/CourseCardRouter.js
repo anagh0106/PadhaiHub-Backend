@@ -6,6 +6,6 @@ const courseController = require('../controller/CourseCardController');
 router.post('/addCourse', courseController.createCourse);
 
 // GET /api/courses → Get all courses
-router.get('/', courseController.getCourses);
+router.get('/getCourse', courseController.getCourses);
 
 module.exports = router;

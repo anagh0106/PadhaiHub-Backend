@@ -18,6 +18,8 @@ exports.createCourse = async (req, res) => {
 exports.getCourses = async (req, res) => {
     try {
         const courses = await Course.find();
+        console.log(courses);
+
         res.json(courses);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch courses.' });
