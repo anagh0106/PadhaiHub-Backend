@@ -548,7 +548,6 @@ const getallStudents = async (req, res) => {
     }
 };
 
-
 module.exports = {
     UserSignup,
     loginUser,
