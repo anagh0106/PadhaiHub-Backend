@@ -73,65 +73,19 @@ const deleteSubjects = async (req, res) => {
         });
     }
 }
-// const courseSubscriptionCounter = async (req, res) => {
-//     const email = req.user?.email;  // ✅ Directly from token for security
-
-//     if (!email) {
-//         return res.status(404).json({
-//             message: "Email not found in token!"
-//         });
-//     }
-
-//     const counter = req.body.counter;
-
-//     if (counter !== undefined) {
-//         try {
-//             await courseSubscriptionModel.create({
-//                 email: email,
-//                 counter: counter
-//             });
-
-//             return res.status(201).json({
-//                 message: "Counter Added Successfully!"
-//             });
-
-//         } catch (err) {
-//             console.log("DB Error => ", err);
-//             return res.status(500).json({
-//                 message: "Internal Server Error",
-//                 error: err.message
-//             });
-//         }
-//     } else {
-//         return res.status(400).json({
-//             message: "Counter is required"
-//         });
-//     }
-// }
 const courseSubscriptionCounter = async (req, res) => {
-    console.log("Request Body =>", req.body);
-    console.log("Decoded User =>", req.user);
-
-    const email = req.user?.email;
-
-    if (!email) {
-        return res.status(404).json({
-            message: "Email not found in token!"
-        });
-    }
-
-    const counter = req.body.counter;
-    console.log("Counter Received =>", counter);
-
-    if (counter === undefined) {
-        return res.status(400).json({
-            message: "Counter is required"
-        });
-    }
 
     try {
+        const email = req.user?.email;
+
+        if (!email) {
+            return res.status(404).json({
+                message: "Email not found in token!"
+            });
+        }
         // 🔍 Check if already exists
         const existing = await CourseSubscriptionModel.findOne({ email });
+        console.log(existing)
 
         if (existing) {
             return res.status(409).json({
@@ -140,13 +94,14 @@ const courseSubscriptionCounter = async (req, res) => {
         }
 
         // ✅ Create new subscription
-        await CourseSubscriptionModel.create({
+        const Subscription = await CourseSubscriptionModel.create({
             email,
-            counter
+            isActivated: true
         });
 
         return res.status(201).json({
-            message: "Counter Added Successfully!"
+            message: "Counter Added Successfully!",
+            subscription: Subscription
         });
 
     } catch (err) {
@@ -157,10 +112,35 @@ const courseSubscriptionCounter = async (req, res) => {
         });
     }
 };
+const getSubcriptedUser = async (req, res) => {
+    try {
+        const email = req.user?.email;
+        console.log(email);
+
+        if (!email) {
+            return res.status(404).json({
+                message: "Email not found in token!"
+            });
+        }
+        const stu = await CourseSubscriptionModel.findOne({ email })
+        const Activated = stu.filter((s) => s.isActivated === true)
+        console.log(Activated);
+        return res.status(200).json({
+            isActivated: Activated
+        })
+    } catch (err) {
+        console.log("DB Error => ", err);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: err.message
+        });
+    }
+}
 
 module.exports = {
     addSubjects,
     getSubjects,
     deleteSubjects,
-    courseSubscriptionCounter
+    courseSubscriptionCounter,
+    getSubcriptedUser
 }

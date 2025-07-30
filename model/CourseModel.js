@@ -13,9 +13,13 @@ const courseSubscriptionCounterSchema = mongoose.Schema({
         required: true,
         unique: true,
     },
-    counter: {
-        type: Number,
-        required: true,
+    // counter: {
+    //     type: Number,
+    //     required: true,
+    // },
+    isActivated: {
+        type: Boolean,
+        default: false,
     }
 })
 

@@ -10,5 +10,5 @@ router.get("/getSubject", courseController.getSubjects)
 router.delete("/delSubject", courseController.deleteSubjects)
 
 router.post("/postCount", middleware, courseController.courseSubscriptionCounter)
-
+router.get("/getSubcriptedUser", middleware, courseController.getSubcriptedUser)
 module.exports = router
