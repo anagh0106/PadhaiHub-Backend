@@ -1,8 +1,44 @@
+// const mongoose = require("mongoose");
+// const schema = mongoose.Schema;
+// const AutoIncrement = require("mongoose-sequence")(mongoose);
+
+// const SignupSchema = new schema({
+//     username: {
+//         type: String,
+//         required: true,
+//     },
+//     email: {
+//         type: String,
+//         required: true,
+//         unique: true,
+//     },
+//     password: {
+//         type: String,
+//         required: true,
+//     },
+//     MotherboardID: {
+//         type: String,
+//         default: null,
+//     },
+//     role: {
+//         type: String,
+//         enum: ['admin', 'user'],
+//         default: 'user',
+//     },
+//     admissionYear: String,
+//     studentId: { type: String, unique: true, sparse: true },
+//     studentSeq: {
+//         type: Number,
+//         unique: true,
+//     },
+// }, {
+//     timestamps: true,
+// });
+
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-const SignupSchema = new schema({
+const SignupSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -10,7 +46,7 @@ const SignupSchema = new schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+        unique: true, // ✅ Ensures no duplicate users
     },
     password: {
         type: String,
@@ -26,23 +62,41 @@ const SignupSchema = new schema({
         default: 'user',
     },
     admissionYear: String,
-    studentId: { type: String, unique: true, sparse: true },
+
+    // Auto-generated fields:
+    studentId: {
+        type: String,
+        unique: true,
+        sparse: true // ✅ Avoids false duplicate error if null
+    },
+
     studentSeq: {
         type: Number,
-        unique: true,
-
-    },
+        unique: true // ✅ This is auto-incremented
+    }
 }, {
     timestamps: true,
+    autoIndex: false // 🔥 Prevents auto-creating indexes unless explicitly defined
 });
 
 
+// SignupSchema.plugin(AutoIncrement,
+//     {
+//         id: "student_counter",
+//         inc_field: "studentSeq"
+//     }
+// );
 SignupSchema.plugin(AutoIncrement,
     {
         id: "student_counter",
-        inc_field: "studentSeq"
+        inc_field: "studentSeq",
     }
 );
+
+SignupSchema.index({ email: 1 }, { unique: true });
+SignupSchema.index({ studentSeq: 1 }, { unique: true });
+SignupSchema.index({ studentId: 1 }, { unique: true, sparse: true });
+
 
 module.exports = mongoose.model("SignUp", SignupSchema);
 
