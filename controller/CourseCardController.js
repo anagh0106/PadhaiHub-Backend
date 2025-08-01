@@ -17,12 +17,21 @@ exports.createCourse = async (req, res) => {
 
 exports.getCourses = async (req, res) => {
     try {
-        console.log("Received Data:", req.body);
+
         const courses = await Course.find();
-        const RegularCourse = courses.filter((c) => c.price < 20000)
-        const AdvanceCourse = courses.filter((c) => c.price >= 20000)
-        res.json([courses, AdvanceCourse]);
+
+        // Filter regular and advance courses
+        const RegularCourse = courses.filter(course => course.price < 20000);
+        const AdvanceCourse = courses.filter(course => course.price >= 20000);
+
+        // Send response
+        return res.status(200).json({
+            regular: RegularCourse,
+            advance: AdvanceCourse
+        });
+
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch courses.' });
+        console.error("Error fetching courses:", error);
+        return res.status(500).json({ error: 'Failed to fetch courses.' });
     }
 };
