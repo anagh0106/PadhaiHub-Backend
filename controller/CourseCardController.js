@@ -21,8 +21,8 @@ exports.getCourses = async (req, res) => {
         const courses = await Course.find();
 
         // Filter regular and advance courses
-        const RegularCourse = courses.filter(course => course.price < 20000);
-        const AdvanceCourse = courses.filter(course => course.price >= 20000);
+        const RegularCourse = courses.filter(course => course.price <= 20000);
+        const AdvanceCourse = courses.filter(course => course.price > 20000);
 
         // Send response
         return res.status(200).json({
