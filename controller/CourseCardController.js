@@ -19,9 +19,8 @@ exports.getCourses = async (req, res) => {
     try {
         console.log("Received Data:", req.body);
         const courses = await Course.find();
-        console.log(courses);
-
-        res.json(courses);
+        const AdvanceCourse = courses.filter((c) => c.price > 20000)
+        res.json([courses, AdvanceCourse]);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch courses.' });
     }
