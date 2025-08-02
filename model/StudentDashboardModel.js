@@ -35,6 +35,10 @@ const taskSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false,
+    },
+    time: {
+        type: Number,
+        required: true
     }
 }, { _id: false });
 
