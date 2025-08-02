@@ -105,7 +105,7 @@ const addTask = async (req, res) => {
     if (!category) return res.status(400).json({ message: "Category is required." });
     if (!priority) return res.status(400).json({ message: "Priority is required." });
     if (!duedate) return res.status(400).json({ message: "Due date is required." });
-    if (!duration) return res.status(400).json({ message: "Duration is required." });
+    if (!time) return res.status(400).json({ message: "Duration is required." });
 
     try {
         // Check if user exists
