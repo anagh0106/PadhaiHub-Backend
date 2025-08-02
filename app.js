@@ -12,9 +12,26 @@ mongoose.set('strictQuery', false);
 
 dbConnection();
 app.use(express.json());
+const allowedOrigins = [
+    "https://padhaihub-one.vercel.app",
+    "http://localhost:3000"
+];
+
 app.use(cors({
-    origin: "https://padhaihub-one.vercel.app" || "http://localhost:3000", credentials: true
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like Postman or mobile apps)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
 }));
+
+// Handle preflight requests for all routes
+app.options("*", cors());
 
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
@@ -55,7 +72,7 @@ app.use("/mocktest", AdminMockTest)
 app.use("/questionTest", QuestionTestByAdmin)
 app.use("/test", TestAction)
 app.use("/fac", FacultyLogin)
-app.use("/courseCard",courseCard)
+app.use("/courseCard", courseCard)
 app.get("/testing", (req, res) => {
     res.json({
         status: "Live ✅",
