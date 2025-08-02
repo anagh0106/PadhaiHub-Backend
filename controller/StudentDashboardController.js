@@ -91,7 +91,7 @@ const addTask = async (req, res) => {
         description,
         category,
         priority,
-        dueDate,
+        duedate,
         duration,
     } = req.body;
 
@@ -104,7 +104,7 @@ const addTask = async (req, res) => {
     if (!description?.trim()) return res.status(400).json({ message: "Please enter task description." });
     if (!category) return res.status(400).json({ message: "Category is required." });
     if (!priority) return res.status(400).json({ message: "Priority is required." });
-    if (!dueDate) return res.status(400).json({ message: "Due date is required." });
+    if (!duedate) return res.status(400).json({ message: "Due date is required." });
     if (!duration) return res.status(400).json({ message: "Duration is required." });
 
     try {
