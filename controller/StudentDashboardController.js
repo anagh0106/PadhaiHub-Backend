@@ -191,7 +191,7 @@ const getTask = async (req, res) => {
 
         return res.status(200).json({
             message: "Tasks fetched!",
-            data: todoList,
+            data: todoList.task,
         });
 
     } catch (err) {
