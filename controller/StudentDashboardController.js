@@ -92,7 +92,7 @@ const addTask = async (req, res) => {
         category,
         priority,
         duedate,
-        duration,
+        time,
     } = req.body;
 
     const email = req.user?.email;
