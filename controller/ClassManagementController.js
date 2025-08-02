@@ -78,6 +78,7 @@ const getClass = async (req, res) => {
         const todaysClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] == today)
         const previousClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] < today)
         const upComingClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] > today)
+        const upComingClassesAdmin = classes.filter(t => new Date(t.date).toISOString().split("T")[0] >= today)
         console.log(todaysClasses);
 
         res.status(201).json({
@@ -85,10 +86,12 @@ const getClass = async (req, res) => {
             previousClasses,
             upComingClasses,
             todaysClasses,
+            upComingClassesAdmin,
             label: {
                 previousClasses: "previousClasses",
                 upComingClasses: "upComingClasses",
-                todaysClasses: "todaysClasses"
+                todaysClasses: "todaysClasses",
+                upComingClassesAdmin: "UpcomingClasses"
             }
         })
     } catch (error) {
