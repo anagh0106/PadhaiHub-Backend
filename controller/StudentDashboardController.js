@@ -87,7 +87,7 @@ const Signupmodel = require("../model/SignupModel");
 // };
 const addTask = async (req, res) => {
     const {
-        title,
+        text,
         description,
         category,
         priority,
@@ -100,7 +100,7 @@ const addTask = async (req, res) => {
     // Validation
     if (!email) return res.status(401).json({ message: "Unauthorized. Email not found in token." });
 
-    if (!title?.trim()) return res.status(400).json({ message: "Please enter task title." });
+    if (!text?.trim()) return res.status(400).json({ message: "Please enter task title." });
     if (!description?.trim()) return res.status(400).json({ message: "Please enter task description." });
     if (!category) return res.status(400).json({ message: "Category is required." });
     if (!priority) return res.status(400).json({ message: "Priority is required." });
