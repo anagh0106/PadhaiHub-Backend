@@ -123,12 +123,12 @@ const addTask = async (req, res) => {
 
         const newTask = {
             taskId,
-            title: title.trim(),
+            text: text.trim(),
             description: description.trim(),
             category,
             priority,
-            dueDate,
-            duration,
+            duedate,
+            time,
             completed: false
         };
 
