@@ -75,16 +75,20 @@ const getClass = async (req, res) => {
         const classes = await classModel.find().populate("faculty")
 
         const today = new Date().toISOString().split("T")[0]
+        const todaysClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] == today)
         const previousClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] < today)
-        const upComingClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] >= today)
+        const upComingClasses = classes.filter(t => new Date(t.date).toISOString().split("T")[0] > today)
+        console.log(todaysClasses);
 
         res.status(201).json({
             classes,
             previousClasses,
             upComingClasses,
+            todaysClasses,
             label: {
                 previousClasses: "previousClasses",
-                upComingClasses: "upComingClasses"
+                upComingClasses: "upComingClasses",
+                todaysClasses: "todaysClasses"
             }
         })
     } catch (error) {
