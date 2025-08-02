@@ -1,4 +1,4 @@
-const { TodoList, Counter } = require("../model/StudentDashboardModel");
+const { TodoList, Counter, category, priority } = require("../model/StudentDashboardModel");
 const Signupmodel = require("../model/SignupModel");
 
 // ADD TASK
@@ -43,13 +43,69 @@ const Signupmodel = require("../model/SignupModel");
 //         return res.status(500).json({ message: "Something went wrong." });
 //     }
 // };
+// const addTask = async (req, res) => {
+//     const { text } = req.body;
+//     const email = req.user?.email;
+
+//     // Validation
+//     if (!email) return res.status(401).json({ message: "Unauthorized. Email not found in token." });
+//     if (!text?.trim()) return res.status(400).json({ message: "Please enter task text." });
+
+//     try {
+//         // Check if user exists
+//         const isUser = await Signupmodel.findOne({ email });
+//         if (!isUser) return res.status(404).json({ message: "User not found." });
+
+//         // Get or create counter and increment taskId
+//         const counter = await Counter.findOneAndUpdate(
+//             { email },
+//             { $inc: { taskSeq: 1 } },
+//             { new: true, upsert: true }
+//         );
+
+//         const taskId = counter.taskSeq;
+
+//         const newTask = { text: text.trim(), completed: false, taskId };
+
+//         // Add to existing list or create new
+//         const updatedList = await TodoList.findOneAndUpdate(
+//             { email },
+//             { $push: { task: newTask } },
+//             { new: true, upsert: true }
+//         );
+
+//         return res.status(200).json({
+//             message: "Task added successfully!",
+//             task: newTask,
+//             taskCount: updatedList.task.length
+//         });
+
+//     } catch (error) {
+//         console.error("Add Task Error:", error);
+//         return res.status(500).json({ message: "Internal server error. Please try again." });
+//     }
+// };
 const addTask = async (req, res) => {
-    const { text } = req.body;
+    const {
+        title,
+        description,
+        category,
+        priority,
+        dueDate,
+        duration,
+    } = req.body;
+
     const email = req.user?.email;
 
     // Validation
     if (!email) return res.status(401).json({ message: "Unauthorized. Email not found in token." });
-    if (!text?.trim()) return res.status(400).json({ message: "Please enter task text." });
+
+    if (!title?.trim()) return res.status(400).json({ message: "Please enter task title." });
+    if (!description?.trim()) return res.status(400).json({ message: "Please enter task description." });
+    if (!category) return res.status(400).json({ message: "Category is required." });
+    if (!priority) return res.status(400).json({ message: "Priority is required." });
+    if (!dueDate) return res.status(400).json({ message: "Due date is required." });
+    if (!duration) return res.status(400).json({ message: "Duration is required." });
 
     try {
         // Check if user exists
@@ -65,7 +121,16 @@ const addTask = async (req, res) => {
 
         const taskId = counter.taskSeq;
 
-        const newTask = { text: text.trim(), completed: false, taskId };
+        const newTask = {
+            taskId,
+            title: title.trim(),
+            description: description.trim(),
+            category,
+            priority,
+            dueDate,
+            duration,
+            completed: false
+        };
 
         // Add to existing list or create new
         const updatedList = await TodoList.findOneAndUpdate(
@@ -85,6 +150,7 @@ const addTask = async (req, res) => {
         return res.status(500).json({ message: "Internal server error. Please try again." });
     }
 };
+
 // EDIT TASK
 const editTask = async (req, res) => {
     const { taskId, text } = req.body;
@@ -163,10 +229,31 @@ const deleteTask = async (req, res) => {
         return res.status(500).json({ message: "Error deleting task." });
     }
 };
+const getCategory = async (req, res) => {
+    try {
+        console.log(category);
+        return res.status(200).json(category)
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error While Getting Category " });
+    }
+}
+const getPriority = async (req, res) => {
+    try {
+        console.log(priority);
+        return res.status(200).json(priority)
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error While Getting priority " });
+    }
+}
+
 
 module.exports = {
     addTask,
     editTask,
     getTask,
-    deleteTask
+    deleteTask,
+    getCategory,
+    getPriority
 };

@@ -25,4 +25,6 @@ router.get("/GetTask",
 )
 router.delete("/DeleteTask/:taskId", middleware, StuDashController.deleteTask);
 
+router.get("/getCategory", StuDashController.getCategory)
+router.get("/getPriority", StuDashController.getPriority)
 module.exports = router;

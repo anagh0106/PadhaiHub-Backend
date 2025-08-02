@@ -1,5 +1,3 @@
-
-
 const mongoose = require("mongoose");
 const category = ["General", "Mathematics", "Physics", "Chemistry", "Biology"]
 const priority = ["Low", "Medium", "High", "Urgent"]
@@ -19,7 +17,6 @@ const taskSchema = new mongoose.Schema({
         enum: category,
         required: true,
         default: "General"
-
     },
     priority: {
         type: String,
@@ -55,7 +52,6 @@ const todolistSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
 // Counter for per-user taskId
 const counterSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
@@ -69,4 +65,6 @@ const Counter = mongoose.model("Counter", counterSchema);
 module.exports = {
     TodoList,
     Counter,
+    category,
+    priority
 };
