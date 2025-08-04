@@ -1,90 +1,7 @@
 const { TodoList, Counter, category, priority } = require("../model/StudentDashboardModel");
 const Signupmodel = require("../model/SignupModel");
+const { tasks } = require("googleapis/build/src/apis/tasks");
 
-// ADD TASK
-// const addTask = async (req, res) => {
-//     const { text } = req.body;
-//     const email = req.user?.email;
-
-//     if (!email) return res.status(401).json({ message: "Unauthorized. Email not found in token." });
-//     if (!text) return res.status(400).json({ message: "Please enter task text." });
-
-//     try {
-//         const isUser = await Signupmodel.findOne({ email });
-//         if (!isUser) return res.status(404).json({ message: "User not found." });
-
-//         const counter = await Counter.findOneAndUpdate(
-//             { email },
-//             { $inc: { taskSeq: 1 } },
-//             { new: true, upsert: true }
-//         );
-
-//         const taskId = counter.taskSeq;
-
-
-//         const newTask = { text, completed: false, taskId };
-
-//         let existing = await TodoList.findOne({ email });
-
-//         if (existing) {
-//             existing.task.push(newTask);
-//             await existing.save();
-//             return res.status(200).json({ message: "Task added!", task: newTask });
-//         } else {
-//             const created = await TodoList.create({
-//                 task: [newTask],
-//                 email
-//             });
-//             return res.status(201).json({ message: "Task list created!", task: created });
-//         }
-
-//     } catch (error) {
-//         console.error("Add Task Error:", error);
-//         return res.status(500).json({ message: "Something went wrong." });
-//     }
-// };
-// const addTask = async (req, res) => {
-//     const { text } = req.body;
-//     const email = req.user?.email;
-
-//     // Validation
-//     if (!email) return res.status(401).json({ message: "Unauthorized. Email not found in token." });
-//     if (!text?.trim()) return res.status(400).json({ message: "Please enter task text." });
-
-//     try {
-//         // Check if user exists
-//         const isUser = await Signupmodel.findOne({ email });
-//         if (!isUser) return res.status(404).json({ message: "User not found." });
-
-//         // Get or create counter and increment taskId
-//         const counter = await Counter.findOneAndUpdate(
-//             { email },
-//             { $inc: { taskSeq: 1 } },
-//             { new: true, upsert: true }
-//         );
-
-//         const taskId = counter.taskSeq;
-
-//         const newTask = { text: text.trim(), completed: false, taskId };
-
-//         // Add to existing list or create new
-//         const updatedList = await TodoList.findOneAndUpdate(
-//             { email },
-//             { $push: { task: newTask } },
-//             { new: true, upsert: true }
-//         );
-
-//         return res.status(200).json({
-//             message: "Task added successfully!",
-//             task: newTask,
-//             taskCount: updatedList.task.length
-//         });
-
-//     } catch (error) {
-//         console.error("Add Task Error:", error);
-//         return res.status(500).json({ message: "Internal server error. Please try again." });
-//     }
-// };
 const addTask = async (req, res) => {
     const {
         text,
@@ -150,8 +67,6 @@ const addTask = async (req, res) => {
         return res.status(500).json({ message: "Internal server error. Please try again." });
     }
 };
-
-// EDIT TASK
 const editTask = async (req, res) => {
     const { taskId, text } = req.body;
     const email = req.user?.email;
@@ -177,7 +92,6 @@ const editTask = async (req, res) => {
         return res.status(500).json({ message: "Error updating task." });
     }
 };
-// GET TASKS
 const getTask = async (req, res) => {
     const email = req.user?.email;
 
@@ -199,7 +113,6 @@ const getTask = async (req, res) => {
         return res.status(500).json({ message: "Internal server error." });
     }
 };
-// DELETE TASK
 const deleteTask = async (req, res) => {
     const email = req.user?.email;
     const taskId = Number(req.params.taskId);
@@ -247,6 +160,30 @@ const getPriority = async (req, res) => {
         return res.status(500).json({ message: "Error While Getting priority " });
     }
 }
+const getPendingTask = async (req, res) => {
+    try {
+        const email = "karmpatel0610@gmail.com"
+        const Tasks = (await TodoList.find({ email: email })).map(t => t.task)
+        const CompletedTask = Tasks[0].filter(t => t.completed)
+        const PendingTask = Tasks[0].filter(t => !t.completed)
+
+        return res.status(200).json({
+            PendingTask: PendingTask,
+            CompletedTask: CompletedTask
+        })
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error While Getting Pending task " });
+    }
+}
+const markAsCompleted = async (req, res) => {
+    try {
+        const { taskId } = req.params
+        console.log(taskId);
+    } catch (error) {
+        return res.status(500).json({ message: "Error While Mark As Completed task " });
+    }
+}
 
 
 module.exports = {
@@ -255,5 +192,7 @@ module.exports = {
     getTask,
     deleteTask,
     getCategory,
-    getPriority
+    getPriority,
+    getPendingTask,
+    markAsCompleted
 };
