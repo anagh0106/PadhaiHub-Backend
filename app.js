@@ -14,7 +14,7 @@ dbConnection();
 app.use(express.json());
 const allowedOrigins = [
     "https://padhaihub-one.vercel.app",
-    "http://localhost:3000"
+    "http://localhost:5173",
 ];
 
 app.use(cors({
