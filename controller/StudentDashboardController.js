@@ -176,26 +176,47 @@ const getPendingTask = async (req, res) => {
         return res.status(500).json({ message: "Error While Getting Pending task " });
     }
 }
+// const markAsCompleted = async (req, res) => {
+//     try {
+//         const { taskId } = req.body;
+//         console.log("Marking done:", taskId);
+
+//         const result = await TodoList.findOneAndUpdate(
+//             { taskId },
+//             { completed: true },
+//             { new: true }
+//         );
+//         if (!result) {
+//             return res.status(404).json({ success: false, message: "Task not found" });
+//         }
+
+//         return res.json({ success: true, updatedTask: result });
+//     } catch (error) {
+//         console.error(error);
+//         return res
+//             .status(500)
+//             .json({ success: false, message: "Error while marking task completed" });
+//     }
+// };
 const markAsCompleted = async (req, res) => {
     try {
         const { taskId } = req.body;
         console.log("Marking done:", taskId);
 
-        const result = await TodoList.findOneAndUpdate(
-            { taskId },
-            { completed: true },
-            { new: true }
-        );
-        if (!result) {
+        const task = await TodoList.findOne({ taskId });
+
+        if (!task) {
             return res.status(404).json({ success: false, message: "Task not found" });
         }
 
-        return res.json({ success: true, updatedTask: result });
+        // Toggle the completed value
+        task.completed = !task.completed;
+        await task.save();
+
+        return res.json({ success: true, updatedTask: task });
     } catch (error) {
         console.error(error);
-        return res
-            .status(500)
-            .json({ success: false, message: "Error while marking task completed" });
+        return res.status(500).json({ success: false, message: "Error while marking task completed" });
     }
 };
 
