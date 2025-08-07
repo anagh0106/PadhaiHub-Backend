@@ -178,12 +178,26 @@ const getPendingTask = async (req, res) => {
 }
 const markAsCompleted = async (req, res) => {
     try {
-        const { taskId } = req.params
-        console.log(taskId);
+        const { taskId } = req.body;
+        console.log("Marking done:", taskId);
+
+        const result = await TodoList.findOneAndUpdate(
+            { taskId },
+            { completed: true },
+            { new: true }
+        );
+        if (!result) {
+            return res.status(404).json({ success: false, message: "Task not found" });
+        }
+
+        return res.json({ success: true, updatedTask: result });
     } catch (error) {
-        return res.status(500).json({ message: "Error While Mark As Completed task " });
+        console.error(error);
+        return res
+            .status(500)
+            .json({ success: false, message: "Error while marking task completed" });
     }
-}
+};
 
 
 module.exports = {

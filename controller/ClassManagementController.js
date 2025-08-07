@@ -3,6 +3,73 @@ const { CourseModel } = require("../model/CourseModel");
 const StudentInfoModel = require("../model/StudentInfoModel");
 const { Subjects, classModel } = require("../model/ClassManagementModel");
 
+// const createClass = async (req, res) => {
+//     try {
+//         const { subject, standard, faculty, time, room, date } = req.body;
+//         const email = req.user?.email;
+
+//         if (!email) {
+//             return res.status(403).json({ message: "You are not permitted to access this" });
+//         }
+//         const facultydata = await FacultyModel.findById(faculty.trim());
+//         // console.log(facultydata);
+
+//         if (!facultydata) {
+//             return res.status(404).json({ message: "Faculty not found" });
+//         }
+
+//         if (!facultydata.subject.includes(subject)) {
+//             return res.status(400).json({ message: `Selected faculty does not teach ${subject}` });
+//         }
+//         // past date and time handler
+//         const classDateTime = new Date(`${date}T${time}`);
+//         const now = new Date();
+
+//         if (classDateTime < now) {
+//             return res.status(400).json({
+//                 message: "You cannot create a class for a past time"
+//             });
+//         }
+
+//         // ⛔ Clash check
+//         const timeToMinutes = (t) => {
+//             const [hrs, mins] = t.split(":").map(Number);
+//             return hrs * 60 + mins;
+//         };
+
+//         const facultyClasses = await classModel.find({ date, faculty: facultydata._id });
+//         const requestedTime = timeToMinutes(time);
+//         const isClash = facultyClasses.some(cls => {
+//             const classTime = timeToMinutes(cls.time);
+//             return Math.abs(classTime - requestedTime) < 120;
+//         });
+
+//         if (isClash) {
+//             return res.status(400).json({
+//                 message: "⚠️ Selected faculty is already assigned in this time slot."
+//             });
+//         }
+
+//         // ✅ Create class
+//         const newClass = new classModel({
+//             subject,
+//             standard,
+//             faculty: facultydata._id,
+//             time,
+//             room,
+//             date
+//         });
+
+//         const savedClass = await newClass.save();
+//         const populated = await savedClass.populate("faculty");
+
+//         res.status(201).json(populated);
+
+//     } catch (error) {
+//         console.error("Create class error:", error);
+//         res.status(500).json({ message: "Internal Server Error!" });
+//     }
+// };
 const createClass = async (req, res) => {
     try {
         const { subject, standard, faculty, time, room, date } = req.body;
@@ -11,42 +78,53 @@ const createClass = async (req, res) => {
         if (!email) {
             return res.status(403).json({ message: "You are not permitted to access this" });
         }
+
+        // 🧑‍🏫 Get faculty details
         const facultydata = await FacultyModel.findById(faculty.trim());
-        // console.log(facultydata);
 
         if (!facultydata) {
             return res.status(404).json({ message: "Faculty not found" });
         }
 
+        // ✅ Subject check
         if (!facultydata.subject.includes(subject)) {
             return res.status(400).json({ message: `Selected faculty does not teach ${subject}` });
         }
-        // past date and time handler
+
+        // 🕒 Past date/time check
         const classDateTime = new Date(`${date}T${time}`);
         const now = new Date();
-
         if (classDateTime < now) {
             return res.status(400).json({
                 message: "You cannot create a class for a past time"
             });
         }
 
-        // ⛔ Clash check
+        // 🕑 Convert time to minutes
         const timeToMinutes = (t) => {
             const [hrs, mins] = t.split(":").map(Number);
             return hrs * 60 + mins;
         };
-
-        const facultyClasses = await classModel.find({ date, faculty: facultydata._id });
         const requestedTime = timeToMinutes(time);
-        const isClash = facultyClasses.some(cls => {
+
+        // 🔁 Faculty time clash check (±2 hours)
+        const facultyClasses = await classModel.find({ date, faculty: facultydata._id });
+        const facultyClash = facultyClasses.some(cls => {
             const classTime = timeToMinutes(cls.time);
             return Math.abs(classTime - requestedTime) < 120;
         });
 
-        if (isClash) {
+        if (facultyClash) {
             return res.status(400).json({
-                message: "⚠️ Selected faculty is already assigned in this time slot."
+                message: `⚠️ ${facultydata.name} is already assigned a class within this time slot.`
+            });
+        }
+
+        // 🚫 Room clash check (same time/date)
+        const roomClash = await classModel.findOne({ date, time, room });
+        if (roomClash) {
+            return res.status(400).json({
+                message: `⚠️ Room ${room} is already assigned for a class at this time.`
             });
         }
 
@@ -70,6 +148,8 @@ const createClass = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error!" });
     }
 };
+
+
 const getClass = async (req, res) => {
     try {
         const classes = await classModel.find().populate("faculty")
