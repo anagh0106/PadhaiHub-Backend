@@ -162,14 +162,18 @@ const getPriority = async (req, res) => {
 }
 const getPendingTask = async (req, res) => {
     try {
-        const email = "karmpatel0610@gmail.com"
+        const email = req.user?.email
         const Tasks = (await TodoList.find({ email: email })).map(t => t.task)
         const CompletedTask = Tasks[0].filter(t => t.completed)
         const PendingTask = Tasks[0].filter(t => !t.completed)
 
         return res.status(200).json({
             PendingTask: PendingTask,
-            CompletedTask: CompletedTask
+            CompletedTask: CompletedTask,
+            labels: {
+                PendingTasks: "Pending Task",
+                CompletedTasks: "Completed Task"
+            }
         })
 
     } catch (error) {
@@ -198,6 +202,7 @@ const getPendingTask = async (req, res) => {
 //             .json({ success: false, message: "Error while marking task completed" });
 //     }
 // };
+
 const markAsCompleted = async (req, res) => {
     try {
         const { taskId } = req.body;
