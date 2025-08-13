@@ -166,10 +166,14 @@ const getTaskStatus = async (req, res) => {
         const Tasks = (await TodoList.find({ email: email })).map(t => t.task)
         const CompletedTask = Tasks[0].filter(t => t.completed)
         const PendingTask = Tasks[0].filter(t => !t.completed)
+        const PendingTaskCount = PendingTask.length
+        const CompletedTaskCount = CompletedTask.length
 
         return res.status(200).json({
             PendingTask: PendingTask,
             CompletedTask: CompletedTask,
+            PendingTaskCount: PendingTaskCount,
+            CompletedTaskCount: CompletedTaskCount,
             labels: {
                 PendingTasks: "Pending Task",
                 CompletedTasks: "Completed Task"
@@ -183,7 +187,7 @@ const getTaskStatus = async (req, res) => {
 const markAsCompleted = async (req, res) => {
     try {
         const { taskId } = req.body;
-        const email = req.user?.email; 
+        const email = req.user?.email;
         // Step 1: Find the document for that email
         const todoDoc = await TodoList.findOne({ email });
         if (!todoDoc) {
