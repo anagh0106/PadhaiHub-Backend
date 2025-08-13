@@ -27,6 +27,6 @@ router.delete("/DeleteTask/:taskId", middleware, StuDashController.deleteTask);
 
 router.get("/getCategory", StuDashController.getCategory)
 router.get("/getPriority", StuDashController.getPriority)
-router.get("/getPendingTask", middleware, StuDashController.getPendingTask)
+router.get("/getTaskStatus", middleware, StuDashController.getTaskStatus)
 router.post("/markAsCompleted", middleware, StuDashController.markAsCompleted)
 module.exports = router;

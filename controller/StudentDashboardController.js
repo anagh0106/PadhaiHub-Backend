@@ -160,7 +160,7 @@ const getPriority = async (req, res) => {
         return res.status(500).json({ message: "Error While Getting priority " });
     }
 }
-const getPendingTask = async (req, res) => {
+const getTaskStatus = async (req, res) => {
     try {
         const email = req.user?.email
         const Tasks = (await TodoList.find({ email: email })).map(t => t.task)
@@ -180,7 +180,6 @@ const getPendingTask = async (req, res) => {
         return res.status(500).json({ message: "Error While Getting Pending task " });
     }
 }
-
 const markAsCompleted = async (req, res) => {
     try {
         const { taskId } = req.body;
@@ -226,6 +225,6 @@ module.exports = {
     deleteTask,
     getCategory,
     getPriority,
-    getPendingTask,
+    getTaskStatus,
     markAsCompleted
 };
