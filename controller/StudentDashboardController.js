@@ -180,48 +180,41 @@ const getPendingTask = async (req, res) => {
         return res.status(500).json({ message: "Error While Getting Pending task " });
     }
 }
-// const markAsCompleted = async (req, res) => {
-//     try {
-//         const { taskId } = req.body;
-//         console.log("Marking done:", taskId);
-
-//         const result = await TodoList.findOneAndUpdate(
-//             { taskId },
-//             { completed: true },
-//             { new: true }
-//         );
-//         if (!result) {
-//             return res.status(404).json({ success: false, message: "Task not found" });
-//         }
-
-//         return res.json({ success: true, updatedTask: result });
-//     } catch (error) {
-//         console.error(error);
-//         return res
-//             .status(500)
-//             .json({ success: false, message: "Error while marking task completed" });
-//     }
-// };
 
 const markAsCompleted = async (req, res) => {
     try {
         const { taskId } = req.body;
-        console.log("Marking done:", taskId);
+        const email = req.user?.email; 
+        // Step 1: Find the document for that email
+        const todoDoc = await TodoList.findOne({ email });
+        if (!todoDoc) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
 
-        const task = await TodoList.findOne({ taskId });
-
-        if (!task) {
+        // Step 2: Find the task inside the array
+        const taskIndex = todoDoc.task.findIndex(t => t.taskId == taskId);
+        if (taskIndex === -1) {
             return res.status(404).json({ success: false, message: "Task not found" });
         }
 
-        // Toggle the completed value
-        task.completed = !task.completed;
-        await task.save();
+        // Step 3: Toggle the completed field
+        todoDoc.task[taskIndex].completed = !todoDoc.task[taskIndex].completed;
 
-        return res.json({ success: true, updatedTask: task });
+        // Step 4: Save the document
+        await todoDoc.save();
+
+        // Step 5: Send response
+        return res.json({
+            success: true,
+            updatedTask: todoDoc.task[taskIndex]
+        });
+
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: "Error while marking task completed" });
+        return res.status(500).json({
+            success: false,
+            message: "Error while marking task completed"
+        });
     }
 };
 
