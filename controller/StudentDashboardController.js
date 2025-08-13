@@ -166,8 +166,8 @@ const getTaskStatus = async (req, res) => {
         const Tasks = (await TodoList.find({ email: email })).map(t => t.task)
         const CompletedTask = Tasks[0].filter(t => t.completed)
         const PendingTask = Tasks[0].filter(t => !t.completed)
-        const PendingTaskCount = PendingTask.length
-        const CompletedTaskCount = CompletedTask.length
+        const PendingTaskCount = PendingTask.length()
+        const CompletedTaskCount = CompletedTask.length()
 
         return res.status(200).json({
             PendingTask: PendingTask,
