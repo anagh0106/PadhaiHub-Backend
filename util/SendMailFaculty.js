@@ -1,21 +1,21 @@
 const mailer = require("nodemailer");
 require("dotenv").config({ path: "../.env" })
-const email = process.env.EMAIL_USER
-const pass = process.env.EMAIL_PASS
+// const email = process.env.EMAIL_USER
+// const pass = process.env.EMAIL_PASS
 
 const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
         secure: true,
-        auth: {
-            user: email,
-            pass: pass
-        }
         // auth: {
-        //     user: "anagh0106@gmail.com",
-        //     pass: "gfzhwajbdcdqpttd"
+        //     user: email,
+        //     pass: pass
         // }
+        auth: {
+            user: "anagh0106@gmail.com",
+            pass: "gfzhwajbdcdqpttd"
+        }
     });
 
     const mailOptions = {
