@@ -65,9 +65,11 @@ const createMockTest = async (req, res) => {
 const getMockTest = async (req, res) => {
     try {
         const email = req.user?.email
+        console.log(email);
 
         if (!email) return null
         const { grade, group } = req.query;
+        console.log(grade,group);
 
         const filters = {};
         const startTest = false
@@ -92,7 +94,6 @@ const getMockTest = async (req, res) => {
         } else {
             console.log("Start Soon");
         }
-
 
         return res.json({ mocktest });
 

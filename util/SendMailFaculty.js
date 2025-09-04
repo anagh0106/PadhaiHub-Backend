@@ -13,8 +13,9 @@ const sendMail = async (to, subject, text) => {
         //     pass: pass
         // }
         auth: {
-            user: "anagh0106@gmail.com",
-            pass: "gfzhwajbdcdqpttd"
+            user: "padhaihuba@gmail.com",
+            // pass: "gfzhwajbdcdqpttd"
+            pass:"hrxdidplllheoqcy"
         }
     });
 
