@@ -15,6 +15,6 @@ const emailSchema = new mongoose.Schema({
     },
 });
 
-const Email = mongoose.model("CoursePurchase", emailSchema);
+const PayModel = mongoose.model("CoursePurchase", emailSchema);
 
-module.exports = Email;
+module.exports = PayModel;

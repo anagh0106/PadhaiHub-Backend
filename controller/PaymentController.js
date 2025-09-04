@@ -1,4 +1,4 @@
-const payModel = require("../model/PaymentModel");
+const PayModel = require("../model/PaymentModel");
 const studentModel = require("../model/StudentInfoModel");
 
 const sendRequest = async (req, res) => {
@@ -6,8 +6,7 @@ const sendRequest = async (req, res) => {
     const email = req.user?.email;
     console.log("Email:", email);
 
-    // email ke basis pe data fetch karo aur studentInfo populate karo
-    const data = await payModel.findOne({ email }).populate("StudentInfo");
+    const data = await PayModel.findOne({ email }).populate("StudentInfo");
     console.log("Payment Data:", data);
 
     return res.json({ email, data });
