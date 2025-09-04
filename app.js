@@ -53,6 +53,7 @@ const TestAction = require("./router/MockTestSubmissionRouter")
 const FacultyLogin = require("./router/FacultyLoginRouter")
 const homepageRouter = require("./router/HomePageRouter")
 const courseCard = require("./router/CourseCardRouter")
+const PayRouter = require("./router/PaymentRouter")
 // const PredictionPython = require("./router/AdminMockTestRouter")
 app.use("/home", homepageRouter)
 app.use('/uploads', express.static('uploads'));
@@ -73,6 +74,7 @@ app.use("/questionTest", QuestionTestByAdmin)
 app.use("/test", TestAction)
 app.use("/fac", FacultyLogin)
 app.use("/courseCard", courseCard)
+app.use("/pay", PayRouter)
 app.get("/testing", (req, res) => {
     res.json({
         status: "Live ✅",
