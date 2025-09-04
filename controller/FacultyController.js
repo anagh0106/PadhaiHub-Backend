@@ -155,7 +155,7 @@ const addFaculty = async (req, res) => {
     </body>
   </html>
   `;
-        await mailer.sendMail(contact, Mailsubject, text)
+        await mailer.sendMail(contact, Mailsubject, mailText)
 
         return res.status(201).json({
             message: "Faculty added successfully!",
