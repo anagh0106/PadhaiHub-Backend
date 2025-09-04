@@ -49,7 +49,7 @@ const SendOTPOnForgotPassword = async (req, res) => {
             await otpsender.sendMail(
                 userEmail,
                 "OTP to Create a New Password",
-                `Hello ${user.firstname}, Your One - Time Password(OTP) for BloodSync is: ${myotp}.`
+                `Hello ${user.firstname}, Your One - Time Password(OTP) for PadhaiHub is: ${myotp}.`
             );
             console.log("OTP email sent successfully");
         } catch (emailError) {
