@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const emailSchema = new mongoose.Schema({
-    studentInfo: {
+    studentData: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "StudentInfo",
     },
@@ -13,6 +13,10 @@ const emailSchema = new mongoose.Schema({
         trim: true, // extra space hata dega
         match: [/^\S+@\S+\.\S+$/, "Invalid email format"], // regex validation
     },
+    isPermitted:{
+        type:Boolean,
+        default:false
+    }
 });
 
 const PayModel = mongoose.model("CoursePurchase", emailSchema);
