@@ -8,7 +8,7 @@ const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
         service: "gmail",
         auth: {
-            user: `${email}`,
+            user: email,
             pass: "hrxdidplllheoqcy"
             // pass: "gfzhwajbdcdqpttd"
         }
