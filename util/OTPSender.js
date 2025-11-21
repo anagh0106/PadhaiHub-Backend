@@ -7,6 +7,8 @@ const sendMail = async (to, subject, text) => {
     // Creating the transporter with Gmail service
     const transport = mailer.createTransport({
         service: "smtp.gmail.com",
+        secure:true,
+        port:465,
         auth: {
             user: _email,
             pass: _pass
