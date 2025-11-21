@@ -6,7 +6,7 @@ const _pass=process.env.PASS
 const sendMail = async (to, subject, text) => {
     // Creating the transporter with Gmail service
     const transport = mailer.createTransport({
-        service: "gmail",
+        service: "smtp.gmail.com",
         auth: {
             user: _email,
             pass: _pass
