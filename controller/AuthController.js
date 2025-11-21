@@ -11,6 +11,66 @@ const otpsender = require("../util/OTPSender")
 const si = require('systeminformation');
 const SubmissionModel = require("../model/MockTestSubmissionModel")
 
+// const SendOTPOnForgotPassword = async (req, res) => {
+//     try {
+//         const userEmail = req.body.email;
+//         if (!userEmail) {
+//             return res.status(400).json({ message: "Email is required" });
+//         }
+
+//         // Check if the email exists in LoginModel
+//         const emailRecord = await signupModel.findOne({ email: userEmail });
+//         console.log("Email Record:", emailRecord); // Debug
+//         if (!emailRecord) {
+//             return res.status(404).json({ message: "Email not found" });
+//         }
+
+//         // Generate OTP
+//         const myotp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+//         console.log("Generated OTP:", myotp); // Debug
+
+//         // Save OTP in the database
+//         // await otpSchema.create({ email: userEmail, otp: myotp, createdAt: Date.now() });
+//         await otpSchema.create({
+//             email: userEmail,
+//             otp: myotp,
+//             createdAt: Date.now(),
+//             expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes validity
+//         });
+//         // Retrieve user details from signupModel
+//         const user = await signupModel.findOne({ email: userEmail });
+//         console.log("User Record:", user); // Debug
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found in signup records" });
+//         }
+
+//         // Send OTP email
+//         try {
+//             await otpsender.sendMail(
+//                 userEmail,
+//                 "OTP to Create a New Password",
+//                 `Hello ${user.firstname}, Your One - Time Password(OTP) for PadhaiHub is: ${myotp}.`
+//             );
+//             console.log("OTP email sent successfully");
+//         } catch (emailError) {
+//             console.error("Error sending email:", emailError);
+//             throw new Error("Failed to send OTP email");
+//         }
+
+//         res.status(200).json({
+//             message: "OTP Sent Successfully!!",
+//             redirectUrl: "/Otppage",
+//         });
+
+
+//     } catch (err) {
+//         console.error("Error in SendOTPToMail:", err);
+//         res.status(500).json({
+//             message: "Something went wrong",
+//             error: err.message,
+//         });
+//     }
+// };
 const SendOTPOnForgotPassword = async (req, res) => {
     try {
         const userEmail = req.body.email;
@@ -18,50 +78,44 @@ const SendOTPOnForgotPassword = async (req, res) => {
             return res.status(400).json({ message: "Email is required" });
         }
 
-        // Check if the email exists in LoginModel
+        // Check user exists
         const emailRecord = await signupModel.findOne({ email: userEmail });
-        console.log("Email Record:", emailRecord); // Debug
         if (!emailRecord) {
             return res.status(404).json({ message: "Email not found" });
         }
 
         // Generate OTP
-        const myotp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
-        console.log("Generated OTP:", myotp); // Debug
+        const myotp = Math.floor(100000 + Math.random() * 900000);
 
-        // Save OTP in the database
-        // await otpSchema.create({ email: userEmail, otp: myotp, createdAt: Date.now() });
-        await otpSchema.create({
-            email: userEmail,
-            otp: myotp,
-            createdAt: Date.now(),
-            expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes validity
-        });
-        // Retrieve user details from signupModel
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+        // 💥 FIX: Insert or Update OTP (no duplicate error)
+        await otpSchema.findOneAndUpdate(
+            { email: userEmail },
+            {
+                $set: {
+                    otp: myotp,
+                    expiresAt,
+                    createdAt: new Date()
+                }
+            },
+            { upsert: true, new: true }
+        );
+
+        // Get user for name
         const user = await signupModel.findOne({ email: userEmail });
-        console.log("User Record:", user); // Debug
-        if (!user) {
-            return res.status(404).json({ message: "User not found in signup records" });
-        }
 
-        // Send OTP email
-        try {
-            await otpsender.sendMail(
-                userEmail,
-                "OTP to Create a New Password",
-                `Hello ${user.firstname}, Your One - Time Password(OTP) for PadhaiHub is: ${myotp}.`
-            );
-            console.log("OTP email sent successfully");
-        } catch (emailError) {
-            console.error("Error sending email:", emailError);
-            throw new Error("Failed to send OTP email");
-        }
+        // Send Email
+        await otpsender.sendMail(
+            userEmail,
+            "OTP to Create a New Password",
+            `Hello ${user.firstname}, Your One - Time Password(OTP) for PadhaiHub is: ${myotp}.`
+        );
 
         res.status(200).json({
             message: "OTP Sent Successfully!!",
             redirectUrl: "/Otppage",
         });
-
 
     } catch (err) {
         console.error("Error in SendOTPToMail:", err);
@@ -71,6 +125,7 @@ const SendOTPOnForgotPassword = async (req, res) => {
         });
     }
 };
+
 const verifyOTP = async (req, res) => {
     try {
         const { otp, email } = req.body;
@@ -459,7 +514,7 @@ const usercount = async (req, res) => {
     try {
         const userCount = await signupModel.countDocuments({ role: 'user' || 'User' });
         console.log(userCount);
-        
+
         res.json({ count: userCount });
     } catch (err) {
         console.error(err);
