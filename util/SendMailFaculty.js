@@ -1,6 +1,7 @@
 const mailer = require("nodemailer");
-require("dotenv").config({ path: "../.env" })
-const email="padhaihuba@gmail.com"
+require("dotenv").config()
+const _email = process.env.EMAIL
+const _pass = process.env.PASS
 
 const sendMail = async (to, subject, text) => {
     const transport = mailer.createTransport({
@@ -8,13 +9,13 @@ const sendMail = async (to, subject, text) => {
         port: 465,
         secure: true,
         auth: {
-            user: "padhaihuba@gmail.com",
-            pass:"hrxdidplllheoqcy"
+            user: _email,
+            pass: _pass
         }
     });
 
     const mailOptions = {
-        from: `"Padhaihub Admin" <${email}>`, // Ensure sender email matches the authenticated account
+        from: `"Padhaihub Admin" <${_email}>`, // Ensure sender email matches the authenticated account
         to: to,
         subject: subject,
         html: `${text}`,
