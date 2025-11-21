@@ -3,7 +3,9 @@ require("dotenv").config();
 const _email = process.env.EMAIL
 const _pass = process.env.PASS
 
+
 const sendMail = async (to, subject, text) => {
+    
     const transport = mailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
