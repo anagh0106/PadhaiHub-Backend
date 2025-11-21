@@ -39,7 +39,7 @@ const SendOTPOnForgotPassword = async (req, res) => {
         });
         // Retrieve user details from signupModel
         const user = await signupModel.findOne({ email: userEmail });
-        console.log("User Record:", user); // Debug
+        // console.log("User Record:", user); // Debug
         if (!user) {
             return res.status(404).json({ message: "User not found in signup records" });
         }
@@ -49,7 +49,7 @@ const SendOTPOnForgotPassword = async (req, res) => {
             await otpsender.sendMail(
                 userEmail,
                 "OTP to Create a New Password",
-                `Hello ${user.firstname}, Your One - Time Password(OTP) for PadhaiHub is: ${myotp}.`
+                `Hello ${user.username.split(' ')[0]}, Your One - Time Password(OTP) for PadhaiHub is: ${myotp}.`
             );
             console.log("OTP email sent successfully");
         } catch (emailError) {

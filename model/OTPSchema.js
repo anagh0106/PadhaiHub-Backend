@@ -5,7 +5,7 @@ const otpSchema = new schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+        // unique: true,
     },
     otp: {
         type: String,
@@ -14,3 +14,4 @@ const otpSchema = new schema({
 })
 
 module.exports = mongooes.model("OTPSchema", otpSchema)
+
